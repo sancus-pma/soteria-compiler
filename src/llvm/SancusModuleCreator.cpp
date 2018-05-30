@@ -10,9 +10,10 @@
 #include <llvm/IR/DerivedTypes.h>
 #include <llvm/IR/Module.h>
 #include <llvm/IR/TypeBuilder.h>
+#include <llvm/IR/CallSite.h>
+#include <llvm/IR/InstIterator.h>
+#include <llvm/IR/InlineAsm.h>
 
-#include <llvm/Support/CallSite.h>
-#include <llvm/Support/InstIterator.h>
 #include <llvm/Support/raw_ostream.h>
 #include <llvm/Support/Debug.h>
 
@@ -135,12 +136,12 @@ bool SancusModuleCreator::handleFunction(Function& f)
                     continue;
             }
 
-            DebugLoc loc = inst->getDebugLoc();
-            Twine locStr;
-            if (!loc.isUnknown())
+            std::string locStr;
+            if (auto loc = inst->getDebugLoc())
             {
-                locStr = " (" + Twine(loc.getLine()) + ":" +
-                         Twine(loc.getCol()) + ")";
+                Twine t(" (" + Twine(loc.getLine()) + ":" +
+                        Twine(loc.getCol()) + ")");
+                locStr = t.str();
             }
 
             errs() << "WARNING: In function " << f.getName() << locStr
