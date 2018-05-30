@@ -1,0 +1,5 @@
+add_subdirectory(llvm)
+add_subdirectory(drivers)
+add_subdirectory(sancus_support)
+add_subdirectory(stubs)
+add_subdirectory(hmac_spongent)
